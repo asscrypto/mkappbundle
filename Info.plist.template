@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
   <key>CFBundleExecutable</key>
-  <string>mcd</string>
+  <string>{{ EXE }}</string>
   <key>CFBundleIconFile</key>
-  <string>mcd.icns</string>
+  <string>{{ APP_ICNS }}</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundlePackageType</key>

@@ -4,12 +4,33 @@ import (
 	"fmt"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
-	"html/template"
+	//	"html/template"
 	"io"
 	"log"
 	"os"
 	"path"
+	"text/template"
 )
+
+const singleBinaryInfoTemplate = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleExecutable</key>
+  <string>{{ .AppName }}</string>
+  <key>CFBundleIconFile</key>
+  <string>{{ .AppName }}.icns</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleVersion</key>
+  <string>{{ .AppVersion }}</string>
+  <key>NSHighResolutionCapable</key>
+  <string>True</string>
+</dict>
+</plist>
+`
 
 var (
 	buildDir    = "buildd"
@@ -51,7 +72,9 @@ func main() {
 		log.Fatalf("couldn't copy the file: %v", err)
 	}
 
-	t := template.Must(template.ParseFiles([]string{"/Users/alessio/devel/mkappbundle/app_template.txt"}...))
+	//t := template.Must(template.ParseFiles([]string{"/Users/alessio/devel/mkappbundle/app_template.txt"}...))
+	t := template.Must(template.New("plist").Parse(singleBinaryInfoTemplate))
+
 	data := struct {
 		AppName    string
 		AppVersion string
@@ -59,6 +82,13 @@ func main() {
 		AppName:    appName,
 		AppVersion: appVersion,
 	}
+
+	//w := new(bytes.Buffer)
+	//if err := xml.EscapeText(f, w.Bytes()); err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//xmltemplate.HTMLEscape()
 
 	f, err := os.Create(path.Join(appBundleDir, "Contents", "Info.plist"))
 	if err != nil {
